@@ -1,0 +1,207 @@
+﻿@page "/"
+@using ZooManager
+
+<style>
+
+    button
+    {
+        width: 75px;
+        height: 75px;
+        font-size: 50px;
+    }
+
+        button.sm
+        {
+            display: inline-flex;
+            width: 50px;
+            height: 50px;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+</style>
+
+<div class="container">
+    <header>
+        <h1 style="text-align:center">CHEESE HUNT</h1>
+    </header>
+
+    <div class="row">
+        <div class="col">
+            <hr />
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:center">Cheese Score: @(Game.cheeseScore)</h5>
+            <h5 style="text-align:center">Turn Counter: @(Game.turnCounter)</h5>
+            <h5 style="text-align:center">Game Status: @(Game.gameStatus)</h5>
+        </div>
+        <div class="col">
+            <table align="left">
+                <tr>
+                    <h5 style="text-align:center">Available Moves:</h5>
+                </tr>
+                <tr>
+                    <button hidden=@(Game.turnCounter != 0 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("mouse"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🐭</h2>
+                    </button>
+                    <button hidden=@(Game.turnCounter !=1 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("hole"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🕳️</h2>
+                    </button>
+                </tr>
+                <tr>
+                    <button hidden=@(Game.turnCounter ==0 || Game.turnCounter % 3 !=0 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("cheese"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🧀</h2>
+                    </button>
+                    <button hidden=@(Game.turnCounter ==0 || Game.turnCounter % 2 !=0 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("meat"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🥩</h2>
+                    </button>
+
+                    <button hidden=@(Game.turnCounter ==0 || Game.turnCounter % 2 !=0 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("rock"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🪨</h2>
+                    </button>
+                </tr>
+                <tr>
+                    <button hidden=@(Game.turnCounter < 2 || Game.turnCounter % 2 ==0 || Game.turnCounter % 3 ==0 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("cat"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🐱</h2>
+                    </button>
+                    <button hidden=@(Game.turnCounter < 2 || Game.turnCounter % 2 ==0 || Game.turnCounter % 3 ==0 || Game.isGameOver == true) @onclick="@(() => Game.AddToHolding("dog"))"
+                            type="button" class="sm btn btn-outline-dark">
+                        <h2>🐶</h2>
+                    </button>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table align="center">
+                @for (var y = 0; y < Game.numCellsY; y++)
+                {
+                    <tr>
+                        @for (var x = 0; x < Game.numCellsX; x++)
+                        {
+                            var a = Game.animalZones[y][x];
+                            <td>
+
+                                <button hidden=@(Game.isGameOver == true) @onclick="@(() => Game.ZoneClick(a))"
+                                        type="button" class="btn btn-outline-dark">
+                                    <h2>@a.emoji<sup>@a.directionLabel</sup></h2>
+                                </button>
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Game Directions: @(Game.fullDirections)</h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <hr />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Mouse Interactions:</h5>
+            <h6 style="text-align:left">Mouse to Cat: If the cat enters any adjacent space to the mouse, the player loses all points and the game is over.</h6>
+            <h6 style="text-align:left">Mouse to Dog: If the dog enters any adjacent space to the mouse, the is sent running as far as it can go across the board in the opposite direction.  If a dog catches a mouse, the player loses all points and the game is over. </h6>
+            <h6 style="text-align:left">Mouse to Cheese: If the mouse lands on the same space as cheese, cheese is eaten and score increases.</h6>
+            <h6 style="text-align:left">Mouse to Meat:  The mouse pushes the meat across the board.  Can be used to lure dogs.</h6>
+            <h6 style="text-align:left">Mouse to Rock: When the mouse runs into a rock or a wall, they change direction, pivoting to the right.  </h6>
+            <h6 style="text-align:left">Mouse to Hole: When the mouse runs into the hole, the game is over.  The player wins if they have eaten three or more pieces of cheese.</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Cat Interactions:</h5>
+            <h6 style="text-align:left">Cat Movements: Cats patrol back and forth, but do not turn.</h6>
+            <h6 style="text-align:left">Cat to Dog: If cat is moving directly towards dog and is 1-3 spaces away, it changes direction.</h6>
+            <h6 style="text-align:left">Cat to Cheese: If cat is adjacent to cheese, it sits in the same space for one extra turn, “staking out” for the mouse to arrive.  After one turn, it moves away.</h6>
+            <h6 style="text-align:left">Cat to Meat: If cat eats the meat, it will speed up, moving two additional spaces ahead.</h6>
+            <h6 style="text-align:left">Cat to Rock: The cat jumps over the rock.</h6>
+            <h6 style="text-align:left">Cat to Hole: If the cat touches a hole, it sits for three turns.</h6>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Dog Interactions:</h5>
+            <h6 style="text-align:left">Dog Movements: Dogs patrol back and forth, but do not turn.</h6>
+            <h6 style="text-align:left">Dog to Cheese: If the dog runs over the cheese, it will eat it and keep walking.  No score is added for the player.</h6>
+            <h6 style="text-align:left">Dog to Meat: If the dog is within three squares of the meat, it can smell the meat and will move towards it.  If the dog eats the meat, it will fall asleep for one turn.</h6>
+            <h6 style="text-align:left">Dog to Rock: The dog turns, breaking it's current patrol pattern.</h6>
+            <h6 style="text-align:left">Dog to Hole: If the dog finds the hole, it gets it’s nose stuck in the hole and can only be lured away by meat.</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Cheese Interactions:</h5>
+            <h6 style="text-align:left">Cheese Movements: Cheese does not move.</h6>
+            <h6 style="text-align:left">Cheese to Meat: If mouse pushes meat into cheese, the player scores 2 points.</h6>
+            <h6 style="text-align:left">Cheese to Hole: If the cheese touches the hole, the player scores 3 points.</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Meat Interactions:</h5>
+            <h6 style="text-align:left">Meat Movements: Meat does not move on it's own.</h6>
+            <h6 style="text-align:left">Meat to Rock: If pushed into a rock, meat gets stuck on the rock and it cannot be pushed in any direction.</h6>
+            <h6 style="text-align:left">Meat to Hole: If the meat is pushed into the hole, the hole cannot be entered for 2 turns.</h6>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h5 style="text-align:left">Hole Interactions:</h5>
+            <h6 style="text-align:left">Hole Movements: Hole cannot move.</h6>
+            <h6 style="text-align:left">Hole to Rock: If a rock is placed next to a hole, it falls in and is removed from the board.</h6>
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Game.SetUpGame();
+    }
+
+}
+
+

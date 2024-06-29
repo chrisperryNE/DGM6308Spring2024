@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZooManager", "ZooManager.csproj", "{A6C8EDDE-0B69-4088-8258-BA601DF0320D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6C8EDDE-0B69-4088-8258-BA601DF0320D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C8EDDE-0B69-4088-8258-BA601DF0320D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C8EDDE-0B69-4088-8258-BA601DF0320D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C8EDDE-0B69-4088-8258-BA601DF0320D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9FFB3714-6696-4651-91E9-89360249B8F7}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $2
+		$2.FileWidth = 80
+		$2.TabsToSpaces = True
+		$2.scope = text/plain
+	EndGlobalSection
+EndGlobal

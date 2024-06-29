@@ -1,0 +1,16 @@
+﻿using System;
+namespace ZooManager
+{
+    public class Animal : Occupant
+    {
+        public string name;
+        public int reactionTime = 1; // default reaction time for animals (1 - 10)
+        public string pointDirection;
+
+
+        virtual public void Activate()
+        {
+            Console.WriteLine($"Animal {name} at {location.x},{location.y} activated");
+        }
+    }
+}

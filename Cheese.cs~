@@ -1,0 +1,14 @@
+﻿using System;
+namespace ZooManager
+{
+    public class Cheese : Occupant
+    {
+        public Cheese()
+        {
+            this.emoji = "🧀";
+            this.species = "cheese";
+        }
+    }
+	
+}
+
